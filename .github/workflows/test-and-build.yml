@@ -2,13 +2,25 @@ name: Test and Build socratic-security
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, master, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main, master, develop]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: pip install --upgrade pip && pip install -e ".[dev]"
+      - run: pytest tests/ -v --cov=socratic_security --cov-report=xml
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
