@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "socratic-security"
+version = "1.0.0"
+description = "Comprehensive security utilities for the Socrates ecosystem - prompt injection detection, authentication, encryption, and audit logging"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Socrates Team", email = "team@socrates.local"}
+]
+
+dependencies = [
+    "cryptography>=41.0.0",
+    "pyotp>=2.9.0",
+    "qrcode>=7.4.2",
+    "bleach>=6.0.0",
+    "requests>=2.31.0",
+    "regex>=2023.0.0",
+]
+
+optional-dependencies = {
+    dev = [
+        "pytest>=7.4.0",
+        "pytest-cov>=4.1.0",
+        "pytest-asyncio>=0.21.0",
+        "black>=23.0.0",
+        "ruff>=0.1.0",
+        "mypy>=1.5.0",
+    ],
+}
+
+[project.urls]
+Homepage = "https://github.com/Nireus79/Socratic-security"
+Documentation = "https://github.com/Nireus79/Socratic-security#readme"
+Repository = "https://github.com/Nireus79/Socratic-security.git"
+Issues = "https://github.com/Nireus79/Socratic-security/issues"
+
+[tool.setuptools]
+packages = ["socratic_security"]
+
+[tool.setuptools.package-data]
+socratic_security = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "W", "I", "N", "C", "B"]
+ignore = ["E501"]  # Line too long - handled by black
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--cov=socratic_security --cov-report=term-local"

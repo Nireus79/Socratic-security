@@ -5,6 +5,11 @@ Provides password validation, token management, account lockout protection,
 and multi-factor authentication (TOTP).
 """
 
+from socratic_security.auth.breach_checker import (
+    PasswordBreachChecker,
+    check_password_breach,
+    get_breach_checker,
+)
 from socratic_security.auth.lockout import (
     AccountLockoutManager,
     LockoutInfo,
@@ -25,4 +30,7 @@ __all__ = [
     "MFASetup",
     "MFAVerification",
     "get_mfa_manager",
+    "PasswordBreachChecker",
+    "check_password_breach",
+    "get_breach_checker",
 ]
