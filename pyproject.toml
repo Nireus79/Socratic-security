@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "socratic-security"
-version = "0.2.0"
+version = "0.2.1"
 description = "Comprehensive security utilities for the Socrates ecosystem"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -35,8 +35,10 @@ Homepage = "https://github.com/Nireus79/Socratic-security"
 Repository = "https://github.com/Nireus79/Socratic-security.git"
 
 [tool.setuptools]
-packages = ["socratic_security"]
 package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.black]
 line-length = 100
