@@ -5,7 +5,7 @@ Tracks failed login attempts and implements progressive account lockout.
 """
 
 import logging
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
 
@@ -50,9 +50,7 @@ class AccountLockoutManager:
         # In-memory storage: {username: {"attempts": [...], "lockout_until": datetime}}
         self._account_state: Dict = {}
 
-    def record_attempt(
-        self, username: str, ip_address: str, success: bool
-    ) -> None:
+    def record_attempt(self, username: str, ip_address: str, success: bool) -> None:
         """
         Record a login attempt.
 
@@ -78,16 +76,11 @@ class AccountLockoutManager:
 
         # Record failed attempt
         now = datetime.now(timezone.utc)
-        state["attempts"].append(
-            {"timestamp": now, "ip_address": ip_address}
-        )
+        state["attempts"].append({"timestamp": now, "ip_address": ip_address})
 
         # Remove attempts outside the window
         window_start = now - timedelta(minutes=self.lockout_window_minutes)
-        state["attempts"] = [
-            a for a in state["attempts"]
-            if a["timestamp"] > window_start
-        ]
+        state["attempts"] = [a for a in state["attempts"] if a["timestamp"] > window_start]
 
         logger.warning(
             f"Failed login attempt for {username} from {ip_address} "
@@ -122,9 +115,7 @@ class AccountLockoutManager:
 
         return True
 
-    def check_and_lock(
-        self, username: str, ip_address: str
-    ) -> Optional[LockoutInfo]:
+    def check_and_lock(self, username: str, ip_address: str) -> Optional[LockoutInfo]:
         """
         Check if account should be locked and apply lockout if needed.
 
@@ -147,10 +138,7 @@ class AccountLockoutManager:
         # Count attempts in current window
         now = datetime.now(timezone.utc)
         window_start = now - timedelta(minutes=self.lockout_window_minutes)
-        recent_attempts = [
-            a for a in state["attempts"]
-            if a["timestamp"] > window_start
-        ]
+        recent_attempts = [a for a in state["attempts"] if a["timestamp"] > window_start]
 
         if len(recent_attempts) >= self.max_attempts:
             # Lock the account

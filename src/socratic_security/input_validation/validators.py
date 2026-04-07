@@ -20,13 +20,10 @@ class SanitizedStr(str):
             raise TypeError("string required")
 
         # Remove HTML tags but preserve text content
-        sanitized = re.sub(r'<[^>]+>', '', v)
+        sanitized = re.sub(r"<[^>]+>", "", v)
 
         # Remove control characters (keep \n, \r, \t)
-        sanitized = "".join(
-            char for char in sanitized
-            if ord(char) >= 32 or char in "\n\r\t"
-        )
+        sanitized = "".join(char for char in sanitized if ord(char) >= 32 or char in "\n\r\t")
 
         # Remove null bytes
         sanitized = sanitized.replace("\0", "")
@@ -69,10 +66,23 @@ def validate_no_sql_injection(v: str) -> str:
         return v
 
     dangerous_patterns = [
-        "DROP TABLE", "DROP DATABASE", "DELETE FROM", "UPDATE ",
-        "INSERT INTO", "TRUNCATE", "--", "/*", "*/", "UNION",
-        "SELECT * FROM", "EXEC ", "EXECUTE ", "CREATE TABLE",
-        "ALTER TABLE", "GRANT ", "REVOKE "
+        "DROP TABLE",
+        "DROP DATABASE",
+        "DELETE FROM",
+        "UPDATE ",
+        "INSERT INTO",
+        "TRUNCATE",
+        "--",
+        "/*",
+        "*/",
+        "UNION",
+        "SELECT * FROM",
+        "EXEC ",
+        "EXECUTE ",
+        "CREATE TABLE",
+        "ALTER TABLE",
+        "GRANT ",
+        "REVOKE ",
     ]
 
     v_upper = v.upper()
@@ -91,16 +101,16 @@ def validate_no_xss(v: str) -> str:
 
     # XSS attack patterns
     xss_patterns = [
-        r'<script[^>]*>.*?</script>',
-        r'<iframe[^>]*>.*?</iframe>',
-        r'javascript:',
-        r'on\w+\s*=',  # event handlers like onclick=
-        r'<img[^>]*on\w+\s*=',
-        r'<svg[^>]*on\w+\s*=',
-        r'<embed[^>]*>',
-        r'<object[^>]*>',
-        r'eval\(',
-        r'expression\(',
+        r"<script[^>]*>.*?</script>",
+        r"<iframe[^>]*>.*?</iframe>",
+        r"javascript:",
+        r"on\w+\s*=",  # event handlers like onclick=
+        r"<img[^>]*on\w+\s*=",
+        r"<svg[^>]*on\w+\s*=",
+        r"<embed[^>]*>",
+        r"<object[^>]*>",
+        r"eval\(",
+        r"expression\(",
     ]
 
     v_lower = v.lower()
@@ -118,7 +128,7 @@ def validate_email(v: str) -> str:
         raise TypeError("string required")
 
     # Basic email validation (RFC 5322 simplified)
-    email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
     if not re.match(email_pattern, v):
         raise ValueError("Invalid email format")
@@ -127,7 +137,7 @@ def validate_email(v: str) -> str:
     if len(v) > 254:  # RFC 5321
         raise ValueError("Email too long (max 254 characters)")
 
-    if len(v.split('@')[0]) > 64:  # Local part limit
+    if len(v.split("@")[0]) > 64:  # Local part limit
         raise ValueError("Email local part too long")
 
     logger.debug(f"Validated email: {v.split('@')[0]}@***")
@@ -140,10 +150,8 @@ def validate_username(v: str) -> str:
         raise TypeError("string required")
 
     # Alphanumeric and underscore only, 3-32 characters
-    if not re.match(r'^[a-zA-Z0-9_]{3,32}$', v):
-        raise ValueError(
-            "Username must be 3-32 characters, alphanumeric and underscore only"
-        )
+    if not re.match(r"^[a-zA-Z0-9_]{3,32}$", v):
+        raise ValueError("Username must be 3-32 characters, alphanumeric and underscore only")
 
     logger.debug(f"Validated username: {v}")
     return v
@@ -155,13 +163,13 @@ def validate_url(v: str) -> str:
         raise TypeError("string required")
 
     # Basic URL validation
-    url_pattern = r'^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/[^\s]*)?$'
+    url_pattern = r"^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/[^\s]*)?$"
 
     if not re.match(url_pattern, v):
         raise ValueError("Invalid URL format")
 
     # Check for javascript: protocol (XSS via redirect)
-    if v.lower().startswith('javascript:'):
+    if v.lower().startswith("javascript:"):
         raise ValueError("JavaScript URLs not allowed")
 
     # Check length
@@ -179,12 +187,12 @@ def sanitize_html(html: str, allowed_tags: Optional[list] = None) -> str:
 
     # Default allowed tags
     if allowed_tags is None:
-        allowed_tags = ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+        allowed_tags = ["p", "br", "strong", "em", "u", "h1", "h2", "h3", "h4", "h5", "h6"]
 
     # Remove script tags and event handlers
-    sanitized = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.IGNORECASE | re.DOTALL)
-    sanitized = re.sub(r'<iframe[^>]*>.*?</iframe>', '', sanitized, flags=re.IGNORECASE | re.DOTALL)
-    sanitized = re.sub(r'\s*on\w+\s*=\s*["\'][^"\']*["\']', '', sanitized, flags=re.IGNORECASE)
+    sanitized = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.IGNORECASE | re.DOTALL)
+    sanitized = re.sub(r"<iframe[^>]*>.*?</iframe>", "", sanitized, flags=re.IGNORECASE | re.DOTALL)
+    sanitized = re.sub(r'\s*on\w+\s*=\s*["\'][^"\']*["\']', "", sanitized, flags=re.IGNORECASE)
 
     logger.debug(f"Sanitized HTML (length: {len(html)} -> {len(sanitized)})")
     return sanitized

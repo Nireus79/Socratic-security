@@ -76,10 +76,7 @@ class MFAManager:
 
         # Create TOTP instance for generating QR code
         totp = pyotp.TOTP(secret)
-        qr_code_uri = totp.provisioning_uri(
-            name=username,
-            issuer_name=self.issuer
-        )
+        qr_code_uri = totp.provisioning_uri(name=username, issuer_name=self.issuer)
 
         # Generate backup recovery codes
         backup_codes = self._generate_backup_codes(self.backup_code_count)
@@ -237,9 +234,7 @@ class MFAManager:
             return None
         return self._mfa_state[username].get("secret")
 
-    def verify_with_recovery_code(
-        self, username: str, code: str
-    ) -> MFAVerification:
+    def verify_with_recovery_code(self, username: str, code: str) -> MFAVerification:
         """
         Verify login using a recovery code (if TOTP device is lost).
 
@@ -260,9 +255,7 @@ class MFAManager:
         code_hash = self._hash_recovery_code(code)
 
         if code_hash not in state.get("recovery_codes", {}):
-            logger.warning(
-                f"Invalid recovery code attempt for user {username}"
-            )
+            logger.warning(f"Invalid recovery code attempt for user {username}")
             return MFAVerification(
                 is_valid=False,
                 error="Invalid recovery code",
@@ -270,9 +263,7 @@ class MFAManager:
 
         recovery_code_info = state["recovery_codes"][code_hash]
         if recovery_code_info["used"]:
-            logger.warning(
-                f"Recovery code already used for user {username}"
-            )
+            logger.warning(f"Recovery code already used for user {username}")
             return MFAVerification(
                 is_valid=False,
                 error="Recovery code already used",

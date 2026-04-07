@@ -1,16 +1,20 @@
 """Prompt Injection Sanitizer"""
+
 import re
 from dataclasses import dataclass
 from typing import Optional, List
 from .config import INPUT_DELIMITERS
 
+
 @dataclass
 class SanitizedInput:
     """Result of input sanitization."""
+
     original_input: str
     sanitized_input: str
     modifications_made: List[str]
     safe_to_use: bool
+
 
 class PromptSanitizer:
     """Sanitizes user input to prevent prompt injection."""
@@ -48,11 +52,7 @@ class PromptSanitizer:
         if self.add_delimiters:
             delimiter_start = INPUT_DELIMITERS["start"]
             delimiter_end = INPUT_DELIMITERS["end"]
-            sanitized = (
-                f"\n{delimiter_start}\n"
-                f"{sanitized}\n"
-                f"{delimiter_end}\n"
-            )
+            sanitized = f"\n{delimiter_start}\n" f"{sanitized}\n" f"{delimiter_end}\n"
             modifications.append("Added input delimiters for isolation")
 
         return SanitizedInput(

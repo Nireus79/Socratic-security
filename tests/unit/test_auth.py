@@ -1,6 +1,5 @@
 """Tests for authentication modules."""
 
-import pytest
 
 
 class TestAccountLockout:
@@ -9,6 +8,7 @@ class TestAccountLockout:
     def test_import(self):
         """Test importing AccountLockoutManager."""
         from socratic_security.auth import AccountLockoutManager
+
         assert AccountLockoutManager is not None
 
 
@@ -18,6 +18,7 @@ class TestMFA:
     def test_import(self):
         """Test importing MFAManager."""
         from socratic_security.auth import MFAManager
+
         assert MFAManager is not None
 
 
@@ -27,4 +28,5 @@ class TestBreachChecker:
     def test_import(self):
         """Test importing PasswordBreachChecker."""
         from socratic_security.auth import PasswordBreachChecker
+
         assert PasswordBreachChecker is not None

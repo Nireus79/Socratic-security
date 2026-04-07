@@ -1,5 +1,4 @@
 """Prompt Injection Configuration - OWASP patterns"""
-import re
 
 INJECTION_PATTERNS = {
     "instruction_override": [

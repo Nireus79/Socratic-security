@@ -79,9 +79,7 @@ class AuditLogger:
         )
 
         self._events.append(event)
-        logger.info(
-            f"Auth event: {action} for user={user_id} ip={ip_address} status={status}"
-        )
+        logger.info(f"Auth event: {action} for user={user_id} ip={ip_address} status={status}")
 
         return event.event_id
 
@@ -134,9 +132,7 @@ class AuditLogger:
         )
 
         self._events.append(event)
-        logger.info(
-            f"Data access: {action} {resource_type}:{resource_id} by user={user_id}"
-        )
+        logger.info(f"Data access: {action} {resource_type}:{resource_id} by user={user_id}")
 
         return event.event_id
 
@@ -193,9 +189,7 @@ class AuditLogger:
             events = [e for e in events if e.action == action]
 
         # Return most recent first
-        return sorted(
-            events, key=lambda e: e.timestamp, reverse=True
-        )[:limit]
+        return sorted(events, key=lambda e: e.timestamp, reverse=True)[:limit]
 
     def clear_events(self) -> int:
         """Clear all in-memory events. Returns count cleared."""

@@ -1,18 +1,22 @@
 """Prompt Injection Detector"""
+
 import re
 from dataclasses import dataclass
 from typing import List, Optional
 from .config import INJECTION_PATTERNS, PATTERN_SEVERITY, RISK_THRESHOLDS
 
+
 @dataclass
 class DetectionResult:
     """Result of prompt injection detection."""
+
     is_suspicious: bool
     risk_score: float
     matched_patterns: List[str]
     severity_level: str
     reasons: List[str]
     warnings: List[str]
+
 
 class PromptInjectionDetector:
     """Detects prompt injection attempts in user input."""
@@ -72,8 +76,8 @@ class PromptInjectionDetector:
         else:
             severity_level = "low"
 
-        is_suspicious = (
-            risk_score >= (RISK_THRESHOLDS["high"] if self.strict_mode else RISK_THRESHOLDS["medium"])
+        is_suspicious = risk_score >= (
+            RISK_THRESHOLDS["high"] if self.strict_mode else RISK_THRESHOLDS["medium"]
         )
 
         return DetectionResult(

@@ -88,19 +88,13 @@ class PasswordBreachChecker:
 
             if response.status_code == 200:
                 # Parse response: format is "SUFFIX:COUNT\r\n"
-                breach_count = self._find_in_response(
-                    response.text, hash_suffix
-                )
+                breach_count = self._find_in_response(response.text, hash_suffix)
                 is_breached = breach_count >= self.threshold
 
                 if is_breached:
-                    logger.warning(
-                        f"Password breach detected: {breach_count} occurrences"
-                    )
+                    logger.warning(f"Password breach detected: {breach_count} occurrences")
                 else:
-                    logger.info(
-                        f"Password breach check passed: {breach_count} occurrences"
-                    )
+                    logger.info(f"Password breach check passed: {breach_count} occurrences")
 
                 return is_breached, breach_count
 
@@ -111,9 +105,7 @@ class PasswordBreachChecker:
 
             else:
                 # API error - log and fail open (don't block on API failure)
-                logger.error(
-                    f"HaveIBeenPwned API error: {response.status_code}"
-                )
+                logger.error(f"HaveIBeenPwned API error: {response.status_code}")
                 return False, 0
 
         except requests.RequestException as e:
@@ -203,9 +195,7 @@ class PasswordBreachChecker:
 _breach_checker = None
 
 
-def get_breach_checker(
-    enabled: bool = None, threshold: int = None
-) -> PasswordBreachChecker:
+def get_breach_checker(enabled: bool = None, threshold: int = None) -> PasswordBreachChecker:
     """
     Get or create the global breach checker.
 
@@ -219,17 +209,15 @@ def get_breach_checker(
     global _breach_checker
 
     if _breach_checker is None:
-        enabled = enabled if enabled is not None else os.getenv(
-            "SECURITY_BREACH_CHECK", "true"
-        ).lower() == "true"
+        enabled = (
+            enabled
+            if enabled is not None
+            else os.getenv("SECURITY_BREACH_CHECK", "true").lower() == "true"
+        )
         threshold = (
-            threshold
-            if threshold is not None
-            else int(os.getenv("BREACH_COUNT_THRESHOLD", "100"))
+            threshold if threshold is not None else int(os.getenv("BREACH_COUNT_THRESHOLD", "100"))
         )
-        _breach_checker = PasswordBreachChecker(
-            enabled=enabled, threshold=threshold
-        )
+        _breach_checker = PasswordBreachChecker(enabled=enabled, threshold=threshold)
 
     return _breach_checker
 

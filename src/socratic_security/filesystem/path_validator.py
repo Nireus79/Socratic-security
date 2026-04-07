@@ -1,10 +1,14 @@
 """Path Traversal Prevention"""
+
 from pathlib import Path
 from typing import Optional
 
+
 class PathTraversalError(Exception):
     """Raised when path traversal attempt is detected."""
+
     pass
+
 
 class PathValidator:
     """Validates file paths to prevent traversal attacks."""

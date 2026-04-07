@@ -1,22 +1,28 @@
 """Code Sandbox Executor"""
+
 import subprocess
 from dataclasses import dataclass
 from typing import Optional
 
+
 @dataclass
 class ExecutionResult:
     """Result of code execution."""
+
     success: bool
     stdout: str
     stderr: str
     error: Optional[str] = None
 
+
 @dataclass
 class SandboxConfig:
     """Sandbox configuration."""
+
     use_docker: bool = False
     timeout: int = 5
     max_memory: int = 128
+
 
 class SandboxExecutor:
     """Executes code in isolated environment."""

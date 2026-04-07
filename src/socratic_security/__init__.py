@@ -1,4 +1,5 @@
 """Socratic Security - Enterprise-grade security utilities"""
+
 __version__ = "0.1.0"
 
 from socratic_security.prompt_injection import (

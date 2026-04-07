@@ -28,14 +28,14 @@ class EncryptedField:
             encryption_key = os.getenv("DATABASE_ENCRYPTION_KEY")
 
         if not encryption_key:
-            logger.warning(
-                "No encryption key provided. Database encryption will be disabled."
-            )
+            logger.warning("No encryption key provided. Database encryption will be disabled.")
             self.cipher = None
             return
 
         try:
-            self.cipher = Fernet(encryption_key.encode() if isinstance(encryption_key, str) else encryption_key)
+            self.cipher = Fernet(
+                encryption_key.encode() if isinstance(encryption_key, str) else encryption_key
+            )
             logger.info("Database encryption initialized")
         except Exception as e:
             logger.error(f"Failed to initialize encryption: {e}")
